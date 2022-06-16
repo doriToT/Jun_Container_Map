@@ -7,6 +7,13 @@
 
 using namespace std;
 
+void Adddata(int _Key, int _Value);
+
+map<int, int> Numbers;
+
+void Adddata(int _Key, int _Value)
+{
+}
 
 int main(void)
 {
@@ -75,6 +82,7 @@ int main(void)
 	// 캐릭터형 문자를 넣어도 된다. 문자는 정수형이면서 상수형이기때문
 	*/
 
+	/*
 
 	enum Key 
 	{   Player, 
@@ -102,7 +110,58 @@ int main(void)
 	}
 
 	// 위처럼 이 형태를 개선한 형태가 map이다.
+	*/
 
+	// 하나당 밑으로 내려가는 2개의 노드가 있다. 2진 트리 구조
+	// 위치는 결정되어 있는데 유동적으로 움직일 수 있다. 
+	
+	// C언어에서는 Map이라 부르고 다른 곳에선 해쉬 테이블이라 부른다.
+
+	Numbers[0] = 0;
+	Numbers[1] = 10;
+	Numbers[2] = 20;
+	Numbers.insert(make_pair(3, 40));
+
+	Numbers[1] = 100;
+
+	Numbers.insert(make_pair(4, 40));
+
+	Adddata(2, 200);
+
+	/*
+	//Numbers.insert(make_pair(2, 200));
+
+	map<int, float>::iterator iter = Numbers.find(2);
+	iter->second = 200;
+	*/
+
+	map<int, float>::iterator iter = Numbers.find(2);
+
+	if (iter == Numbers.end())
+		Numbers.insert(make_pair(2, 200));
+	else
+		iter->second = 200;
+
+	for (map<int, int>::iterator iter = Numbers.begin();
+		iter != Numbers.end() ; ++iter)
+		cout << iter->second << endl;
+
+	// 모듈화하는 이유는 2번이상 반복하는 함수는 무조건 줄일 수 있다.
+
+	/*
+	// 기존의 위의 값은 덮어진다. 즉, 30이 나온다. (강제입력방식)
+	Numbers[1] = 30;
+    */
 
 	return 0;
+}
+
+void Adddata(int _Key, int _Value)
+{
+	map<int, int>::iterator iter = Numbers.find(_Key);
+
+	if (iter == Numbers.end())
+		Numbers.insert(make_pair(_Key, _Value));
+	else
+		iter->second = _Value;
 }
