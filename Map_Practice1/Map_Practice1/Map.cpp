@@ -7,161 +7,124 @@
 
 using namespace std;
 
-void Adddata(int _Key, int _Value);
+// 프로토타입 패턴의 일부
+// 복사해서 사용할 원형 객체 만들어 놓는다.
+// new할당제보단 복사생성자를 만들어서 하
 
-map<int, int> Numbers;
-
-void Adddata(int _Key, int _Value)
+struct Vector3
 {
-}
+	float x, y, z;
+
+	Vector3() : x(0.0f), y(0.0f), z(0.0f) {};
+
+	Vector3(const float& _x, const float& _y) : x(_x), y(_y), z(0.0f) {};
+
+	Vector3(const float& _x, const float& _y, const float& _z)
+		: x(_x), y(_y), z(_z) {};
+};
+
+struct Transform
+{
+	Vector3 Position;
+	Vector3 Rotation;
+	Vector3 Scale;
+};
+
+struct Object
+{
+	Transform Info;
+
+	Object() {};
+
+	Object(const Transform& _Info) : Info(_Info) {};
+};
+
+struct Player : public Object
+{
+	Player() {};
+
+	Player(const Transform& _Info) : Object(_Info) {};
+};
+
+map<string, list<Object*>> Objects;
+
+void Initialize();
+void AddObject(string _Key, Object* _Object);
 
 int main(void)
 {
-	/*
-	//읽고 싶지 않은 데이터는 싱글톤에 놔둔다.
-	//C는 기본적으로 데이터를 들고오는 기능은 없고 소켓으로 열어야한다.
-	//따라서 밑의 형식으로 데이터를 들고올 수 는 없다.
-	//컨테이너는 언제나 결합방식이 바뀔 수 있다.
-	*/
+	//Initialize();
 
-	/*
-	map<int, int> Numbers;
+	Transform Info;
 
-	// ** Key, Value
-	//map<int, int>
-	
-	Numbers[0] = 1;
-	Numbers[1] = 2;
-	Numbers[2] = 3;
-	Numbers[3] = 4;
-	Numbers[4] = 5;
-	
-	for (int i = 0; i < 5; ++i)
+	Info.Position.x = 10;
+	Info.Position.y = 20;
+	Info.Position.z = 30;
+
+	AddObject("Player", new Player(Info));
+
+	/* 
+	for (list <Object*>::iterator iter = Objects.begin()->second.begin();
+	     iter != Object.begin()->second.end(); ++iter)
 	{
-		cout << Numbers[i] << endl;
+	   cout << "Position x: " << (*iter)->Info.Position.x << endl;
+	   cout << "Position y: " << (*iter)->Info.Position.y << endl;
+	   cout << "Position z: " << (*iter)->Info.Position.z << endl;
 	}
 	*/
 
-	/*
-	map<string, int> Numbers;
-
-	Numbers["A"] = 1;
-	Numbers["B"] = 2;
-	Numbers["C"] = 3;
-	Numbers["D"] = 4;
-	Numbers["E"] = 5;
-
-	for (map<string, int>::iterator iter = Numbers.begin();
-		iter != Numbers.end(); ++iter)
+	// for (list 형태::iterator i = qwea.being()->second.begin();
+	//      i != qwea.begin()->second.end(); ++i)
+	for (list <Object*>::iterator iter = Objects.begin()->second.begin();
+		iter != Objects.begin()->second.end(); ++iter)
 	{
-		cout << (*iter).first << endl;
-		cout << (*iter).second << endl << endl;
+		cout << "Position.x: " << (*iter)->Info.Position.x << endl;
 	}
-	//map에서 (*iter).first는 헤시값 키값이고 second가 원소를 나타낸다.
-	//iterator 는 반복자다.
-	//back이 마지막 원소를 나타내고
-	//end는 끝이 났다는 것을 알려준다. 즉 end전이 마지막 원소이다.(아닐때까지 돈다.)
-	*/
 
-	/*
-	enum Key { AAA, BBB, CCC, DDD, EEE };
-
-
-	const int Max = 10;
-	int max = 10;
-
-	Key _State = AAA;
-	int Array[EEE];
-
-	cout << Array[_State] << endl;
-
-	// 스페이스바도 된다. 32이다. int Araay[' '];
-
-	// 배열은 정수형이면서 상수형이여야 한다.
-	// 위의 Max를 넣으면 심볼릭 상수라고도 부른다.
-	// 캐릭터형 문자를 넣어도 된다. 문자는 정수형이면서 상수형이기때문
-	*/
-
-	/*
-
-	enum Key 
-	{   Player, 
-		Enemy, 
-		Bullet, 
-		Max, 
-	};
-
-
-	const int MaxObject = 128;
-
-	int Array[Max][MaxObject];
-	
-	for (int i = 0; i < Max; ++i)
+	for (auto iter = Objects.begin();
+		iter != Objects.end(); ++iter)
 	{
-		for (int j = 0; j < MaxObject; ++j)
+		cout << "Key Name : " << iter->first << endl;
+
+		for (auto iter2 = iter->second.begin();
+			iter2 != iter->second.end(); ++iter2)
 		{
-			Array[i][j] = j;
+			cout << "Pos X : " << (*iter2)->Info.Position.x << endl;
+			cout << "Pos Y : " << (*iter2)->Info.Position.y << endl;
+			cout << "Pos Z : " << (*iter2)->Info.Position.z << endl << endl;
 		}
 	}
 
-	for (int i = 0; i < MaxObject; ++i)
-	{
-		cout << Array[Player][i] << endl;
-	}
 
-	// 위처럼 이 형태를 개선한 형태가 map이다.
-	*/
-
-	// 하나당 밑으로 내려가는 2개의 노드가 있다. 2진 트리 구조
-	// 위치는 결정되어 있는데 유동적으로 움직일 수 있다. 
-	
-	// C언어에서는 Map이라 부르고 다른 곳에선 해쉬 테이블이라 부른다.
-
-	Numbers[0] = 0;
-	Numbers[1] = 10;
-	Numbers[2] = 20;
-	Numbers.insert(make_pair(3, 40));
-
-	Numbers[1] = 100;
-
-	Numbers.insert(make_pair(4, 40));
-
-	Adddata(2, 200);
-
-	/*
-	//Numbers.insert(make_pair(2, 200));
-
-	map<int, float>::iterator iter = Numbers.find(2);
-	iter->second = 200;
-	*/
-
-	map<int, float>::iterator iter = Numbers.find(2);
-
-	if (iter == Numbers.end())
-		Numbers.insert(make_pair(2, 200));
-	else
-		iter->second = 200;
-
-	for (map<int, int>::iterator iter = Numbers.begin();
-		iter != Numbers.end() ; ++iter)
-		cout << iter->second << endl;
-
-	// 모듈화하는 이유는 2번이상 반복하는 함수는 무조건 줄일 수 있다.
-
-	/*
-	// 기존의 위의 값은 덮어진다. 즉, 30이 나온다. (강제입력방식)
-	Numbers[1] = 30;
-    */
+	//cout << Objects("Player")->Info.Position.x << endl;
+	//cout << Objects("Player")->Info.Position.y << endl;
+	//cout << Objects("Player")->Info.Position.z << endl;
 
 	return 0;
 }
 
-void Adddata(int _Key, int _Value)
+void Initialize()
 {
-	map<int, int>::iterator iter = Numbers.find(_Key);
+	Transform Info;
 
-	if (iter == Numbers.end())
-		Numbers.insert(make_pair(_Key, _Value));
+	Info.Position.x = 10;
+	Info.Position.y = 20;
+	Info.Position.z = 30;
+
+	
+	//Objects["Player"] = new Player(Info);
+}
+
+void AddObject(string _Key, Object* _Object)
+{
+	map<string, list<Object*>>::iterator iter = Objects.find(_Key);
+
+	if (iter == Objects.end())
+	{
+		list<Object*> Temp;
+		Temp.push_back(_Object);
+		Objects.insert(make_pair(_Key, Temp));
+	}
 	else
-		iter->second = _Value;
+		iter->second.push_back(_Object);
 }
